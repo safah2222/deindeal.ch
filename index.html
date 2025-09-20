@@ -590,7 +590,7 @@
             id="couponCode" 
             class="form-input" 
             maxlength="13" 
-            placeholder="XXXXXX-XXXXXX"
+            placeholder="XXXXXXXXXX"
             required 
           />
           <div class="code-help">
@@ -778,11 +778,11 @@
         valid = false; 
       }
       
-      // Validate coupon code format: XXXXXX-XXXXXX
-      if (!/^[A-Za-z0-9]{6}-[A-Za-z0-9]{6}$/.test(couponCode)) { 
-        showError('couponError','Code must be in format XXXXXX-XXXXXX (12 characters + dash).'); 
-        valid = false; 
-      }
+    // Validate coupon code format: XXXXXXXXXX (10 alphanumeric characters)
+if (!/^[A-Za-z0-9]{10}$/.test(couponCode)) {
+  showError('couponError', 'Code must be exactly 10 characters (letters and numbers only).');
+  valid = false;
+}
 
       const tokenInput = document.querySelector("input[name='cf-turnstile-response']");
       const token = tokenInput ? tokenInput.value : '';
