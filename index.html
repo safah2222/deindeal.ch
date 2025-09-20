@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elicensenest – Redeem Your Voucher</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --secondary: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-light: #94a3b8;
+      --border: #e2e8f0;
+      --border-focus: #4f46e5;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: var(--bg-card);
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .logo i {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 2rem;
+    }
+
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--success);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin: 1rem auto;
+        padding: 0 1rem;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+      
+      .header-info {
+        font-size: 0.75rem;
+        padding: 0.375rem 0.75rem;
+      }
+    }
+
+    /* Form Card */
+    .form-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      padding: 2.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .form-title {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-subtitle {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    /* Form Groups */
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .form-label i {
+      color: var(--primary);
+      width: 16px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgb(79 70 229 / 0.1);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-light);
+    }
+
+    .form-input.error {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgb(239 68 68 / 0.1);
+    }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.75rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      padding-right: 3rem;
+    }
+
+    .error-message {
+      display: none;
+      color: var(--error);
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      font-weight: 500;
+    }
+
+    .error-message.show {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    /* Code Format Help */
+    .code-help {
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-top: 0.75rem;
+    }
+
+    .code-help-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .code-examples {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .code-example {
+      background: var(--bg-card);
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--primary);
+      border: 1px solid var(--border);
+    }
+
+    /* Submit Button */
+    .submit-button {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .submit-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .submit-button:disabled {
+      background: var(--text-light);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+      display: none;
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .loading-spinner.active {
+      display: block;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--border);
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Message */
+    .message {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      text-align: center;
+      display: none;
+    }
+
+    .message.success {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+      display: block;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+      display: block;
+    }
+
+    /* Info Card */
+    .info-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      height: fit-content;
+      position: sticky;
+      top: 6rem;
+    }
+
+    .info-header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .info-header h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-header p {
+      opacity: 0.9;
+      font-size: 0.875rem;
+    }
+
+    .info-content {
+      padding: 1.5rem;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: var(--radius);
+      border-left: 4px solid var(--primary);
+    }
+
+    .step:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-number {
+      background: var(--primary);
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+      font-size: 0.875rem;
+    }
+
+    .step-description {
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+    }
+
+    /* Support Section */
+    .support-section {
+      background: #f1f5f9;
+      padding: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .support-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .support-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+
+    .support-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Note */
+    .note {
+      background: #fffbeb;
+      border: 1px solid #fed7aa;
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .note i {
+      color: var(--warning);
+      margin-top: 0.125rem;
+    }
+
+    .note-text {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Turnstile Container */
+    .turnstile-container {
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
+    /* Mobile Optimizations */
+    @media (max-width: 640px) {
+      .form-card {
+        padding: 1.5rem;
+      }
+      
+      .form-title {
+        font-size: 1.5rem;
+      }
+      
+      .code-examples {
+        flex-direction: column;
+      }
+      
+      .info-card {
+        position: static;
+      }
+      
+      .step {
+        padding: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <i class="fas fa-shield-alt"></i>
+        <span>Elicensenest</span>
+      </div>
+      <div class="header-info">
+        <i class="fas fa-clock"></i>
+        <span>License delivered within 1 minute</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Form Section -->
+    <div class="form-card">
+      <div class="form-header">
+        <h1 class="form-title">Redeem Your Voucher</h1>
+        <p class="form-subtitle">Enter your details below to receive your digital license</p>
+      </div>
+
+      <form id="redeemForm">
+        <div class="form-group">
+          <label class="form-label" for="name">
+            <i class="fas fa-user"></i>
+            First Name *
+          </label>
+          <input 
+            type="text" 
+            id="name" 
+            class="form-input" 
+            maxlength="30" 
+            placeholder="Enter your first name"
+            required 
+          />
+          <div id="nameError" class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            Please enter your name.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">
+            <i class="fas fa-envelope"></i>
+            Email Address *
+          </label>
+          <input 
+            type="email" 
+            id="email" 
+            class="form-input" 
+            placeholder="Enter your email address"
+            required 
+          />
+          <div class="note">
+            <i class="fas fa-info-circle"></i>
+            <div class="note-text">Your digital license will be sent to this email address</div>
+          </div>
+          <div id="emailError" class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            Please enter a valid email address.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="phone">
+            <i class="fas fa-phone"></i>
+            Phone Number *
+          </label>
+          <input 
+            type="tel" 
+            id="phone" 
+            class="form-input" 
+            maxlength="15" 
+            pattern="[\d+]{1,15}" 
+            placeholder="Include country code (e.g., +1 for US, +44 for UK)"
+            required 
+          />
+          <div id="phoneError" class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            Enter up to 15 digits; "+" allowed only at start.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="couponCode">
+            <i class="fas fa-ticket-alt"></i>
+            Redemption Code *
+          </label>
+          <input 
+            type="text" 
+            id="couponCode" 
+            class="form-input" 
+            maxlength="13" 
+            placeholder="XXXXXX-XXXXXX"
+            required 
+          />
+          <div class="code-help">
+            <div class="code-help-title">
+              <i class="fas fa-lightbulb"></i>
+              Code Format Examples:
+            </div>
+            <div class="code-examples">
+              <span class="code-example">5NSQ5J-4R8YMA</span>
+              <span class="code-example">FK9Y5G-UTX8KJ</span>
+              <span class="code-example">FTVS9A-87UN7R</span>
+            </div>
+          </div>
+          <div id="couponError" class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            Code must be in format XXXXXX-XXXXXX (12 characters + dash).
+          </div>
+        </div>
+
+        <!-- Version Selector (hidden by default) -->
+        <div class="form-group" id="versionGroup" style="display:none;">
+          <label class="form-label" for="version">
+            <i class="fas fa-windows"></i>
+            Windows Server Version *
+          </label>
+          <select id="version" name="version" class="form-input form-select" disabled>
+            <option value="">Select a version...</option>
+          </select>
+          <div id="versionError" class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            Please pick a version.
+          </div>
+        </div>
+
+        <!-- Cloudflare Turnstile -->
+        <div class="form-group">
+          <div class="turnstile-container">
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAABvKWFkK_Tl-kuW7"></div>
+          </div>
+          <div id="captchaError" class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            Please complete the CAPTCHA.
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="submit-button">
+          <i class="fas fa-paper-plane"></i>
+          Submit Redemption
+        </button>
+
+        <div class="loading-spinner" id="loadingSpinner">
+          <div class="spinner"></div>
+          <p style="margin-top: 0.5rem; color: var(--text-secondary);">Processing your request...</p>
+        </div>
+
+        <div id="message" class="message"></div>
+      </form>
+    </div>
+
+    <!-- Instructions Section -->
+    <div class="info-card">
+      <div class="info-header">
+        <h2><i class="fas fa-question-circle"></i> How to Find Your Voucher Code</h2>
+        <p>Follow these simple steps to locate your redemption code</p>
+      </div>
+      
+      <div class="info-content">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-title">Purchase Your Deal</div>
+            <div class="step-description">Buy your digital license deal on deindeal.ch</div>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-title">Check Your Email</div>
+            <div class="step-description">You'll receive a confirmation email with your voucher code</div>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-title">Redeem Here</div>
+            <div class="step-description">Enter your code in the form to get your license</div>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <div class="step-title">Receive License</div>
+            <div class="step-description">Your license will be delivered to your email within 1 minute</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="support-section">
+        <div class="support-title">
+          <i class="fas fa-headset"></i>
+          Need Assistance?
+        </div>
+        <p style="font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+          Haven't received your order or need help with redemption?
+        </p>
+        <a href="mailto:support@elicensenest.com" class="support-link">
+          <i class="fas fa-envelope"></i> support@elicensenest.com
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script>
+    const showError = (id, msg) => {
+      const el = document.getElementById(id);
+      el.textContent = '';
+      el.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${msg}`;
+      el.classList.add('show');
+      
+      // Add error styling to input
+      const input = document.getElementById(id.replace('Error', ''));
+      if (input) input.classList.add('error');
+    };
+    
+    const clearError = id => {
+      const el = document.getElementById(id);
+      el.classList.remove('show');
+      
+      // Remove error styling from input
+      const input = document.getElementById(id.replace('Error', ''));
+      if (input) input.classList.remove('error');
+    };
+
+    // Auto-format the coupon code input
+    document.getElementById('couponCode').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+      
+      if (value.length > 6) {
+        value = value.substring(0, 6) + '-' + value.substring(6, 12);
+      }
+      
+      e.target.value = value;
+      
+      // Clear error when user starts typing
+      if (value.length > 0) {
+        clearError('couponError');
+      }
+    });
+
+    // Clear errors when user starts typing
+    ['name', 'email', 'phone'].forEach(field => {
+      document.getElementById(field).addEventListener('input', () => {
+        clearError(field + 'Error');
+      });
+    });
+
+    document.getElementById('redeemForm').addEventListener('submit', async function(e) {
+      console.log('🟢 Form submit triggered');
+      e.preventDefault();
+
+      // Clear all errors
+      ['nameError','emailError','phoneError','couponError','captchaError','versionError']
+        .forEach(clearError);
+
+      const name         = document.getElementById('name').value.trim();
+      const email        = document.getElementById('email').value.trim();
+      const phone        = document.getElementById('phone').value.trim();
+      const couponCode   = document.getElementById('couponCode').value.trim();
+      let valid = true;
+
+      if (!name) { 
+        showError('nameError','Please enter your name.'); 
+        valid = false; 
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { 
+        showError('emailError','Please enter a valid email address.'); 
+        valid = false; 
+      }
+      if (!/^[\d+]{1,15}$/.test(phone)) { 
+        showError('phoneError','Enter up to 15 digits; "+" allowed only at start.'); 
+        valid = false; 
+      }
+      
+      // Validate coupon code format: XXXXXX-XXXXXX
+      if (!/^[A-Za-z0-9]{6}-[A-Za-z0-9]{6}$/.test(couponCode)) { 
+        showError('couponError','Code must be in format XXXXXX-XXXXXX (12 characters + dash).'); 
+        valid = false; 
+      }
+
+      const tokenInput = document.querySelector("input[name='cf-turnstile-response']");
+      const token = tokenInput ? tokenInput.value : '';
+      if (!token) { 
+        showError('captchaError','Please complete the CAPTCHA.'); 
+        valid = false; 
+      }
+
+      if (!valid) return;
+
+      // Check version selection
+      const versionGroup = document.getElementById('versionGroup');
+      const versionSelect = document.getElementById('version');
+      let version = null;
+      if (versionGroup.style.display !== 'none') {
+        version = versionSelect.value;
+        if (!version) { 
+          showError('versionError','Please pick a version.'); 
+          return; 
+        }
+        clearError('versionError');
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      const spinner   = document.getElementById('loadingSpinner');
+      const messageEl = document.getElementById('message');
+      
+      submitBtn.disabled = true;
+      spinner.classList.add('active');
+      messageEl.className = 'message'; // Reset classes
+
+      try {
+        const resp = await fetch('https://elicensenest.com/wowcherapi', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ 
+            name, 
+            email, 
+            phone, 
+            couponCode, 
+            turnstileResponse: token, 
+            ...(version && {version}) 
+          })
+        });
+        const result = await resp.json();
+
+        if (result.versions) {
+          versionSelect.innerHTML = result.versions.map(v => 
+            `<option value="${v}">${v}</option>`
+          ).join('');
+          versionGroup.style.display = 'block';
+          versionSelect.disabled = false;
+          
+          messageEl.innerHTML = `<i class="fas fa-check-circle"></i> ${result.prompt} for ${result.product}.`;
+          messageEl.className = 'message success';
+          return;
+        }
+
+        if (result.success) {
+          messageEl.innerHTML = `<i class="fas fa-check-circle"></i> Voucher redeemed successfully! Check your email now!`;
+          messageEl.className = 'message success';
+          
+          // Reset form on success
+          this.reset();
+        } else {
+          messageEl.innerHTML = `<i class="fas fa-times-circle"></i> ${result.message || 'Redemption failed. Please try again.'}`;
+          messageEl.className = 'message error';
+        }
+      } catch (err) {
+        console.error(err);
+        messageEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Network error. Please check your connection and try again.`;
+        messageEl.className = 'message error';
+      } finally {
+        submitBtn.disabled = false;
+        spinner.classList.remove('active');
+        if (typeof turnstile !== 'undefined') turnstile.reset();
+      }
+    });
+  </script>
+</body>
+</html>
