@@ -728,21 +728,7 @@
       if (input) input.classList.remove('error');
     };
 
-    // Auto-format the coupon code input
-    document.getElementById('couponCode').addEventListener('input', function(e) {
-      let value = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-      
-      if (value.length > 6) {
-        value = value.substring(0, 6) + '-' + value.substring(6, 12);
-      }
-      
-      e.target.value = value;
-      
-      // Clear error when user starts typing
-      if (value.length > 0) {
-        clearError('couponError');
-      }
-    });
+    
 
     // Clear errors when user starts typing
     ['name', 'email', 'phone'].forEach(field => {
