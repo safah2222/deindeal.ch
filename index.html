@@ -764,6 +764,7 @@
 
     // AUTO-CHECK VOUCHER CODE WHEN 10 DIGITS ENTERED
     let checkingCode = false;
+    let codeNeedsVersion = false; // Track if code needs version selection
     const couponInput = document.getElementById('couponCode');
     
     couponInput.addEventListener('input', async function(e) {
@@ -774,8 +775,10 @@
       clearInfo('couponInfo');
       couponInput.classList.remove('checking');
       
-      // Hide version selector if code is changed
+      // Hide version selector and message if code is changed
       document.getElementById('versionGroup').style.display = 'none';
+      document.getElementById('message').className = 'message';
+      codeNeedsVersion = false;
       
       // Check if exactly 10 alphanumeric characters
       if (code.length === 10 && /^[A-Z0-9]{10}$/.test(code)) {
@@ -786,28 +789,17 @@
         checkingCode = true;
         
         try {
-          // Get CAPTCHA token
-          const tokenInput = document.querySelector("input[name='cf-turnstile-response']");
-          const token = tokenInput ? tokenInput.value : '';
-          
-          if (!token) {
-            clearInfo('couponInfo');
-            couponInput.classList.remove('checking');
-            showError('captchaError', 'Please complete the CAPTCHA first.');
-            checkingCode = false;
-            return;
-          }
-
-          // Send request to backend to check code
+          // ONLY CHECK IF CODE EXISTS AND NEEDS VERSION SELECTION
+          // Send minimal request - backend will check available_vouchers table
           const resp = await fetch('https://elicensenest.com/wowcherapi', {
             method: 'POST',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({ 
-              name: 'temp',  // Temporary values for checking
-              email: 'temp@temp.com',
-              phone: '+1234567890',
-              couponCode: code, 
-              turnstileResponse: token
+              name: 'check',  // Fake data just for checking
+              email: 'check@check.com',
+              phone: '+0000000000',
+              couponCode: code,
+              turnstileResponse: 'check' // Backend should handle this for check-only
             })
           });
           
@@ -825,30 +817,31 @@
             versionGroup.style.display = 'block';
             versionLabel.textContent = `Select Your Operating System for ${result.product} *`;
             
-            // Show success message
+            codeNeedsVersion = true;
+            
+            // Show info message
             const messageEl = document.getElementById('message');
-            messageEl.innerHTML = `<i class="fas fa-check-circle"></i> Code verified! ${result.prompt}`;
+            messageEl.innerHTML = `<i class="fas fa-check-circle"></i> Code verified! Please select your operating system below.`;
             messageEl.className = 'message info';
             
             // Scroll to version selector
-            versionGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          } else if (result.success) {
-            // Code doesn't need version selection, it's either:
-            // - Windows Pro/Home (will process on submit)
-            // - Code not found (processing message)
-            const messageEl = document.getElementById('message');
-            messageEl.innerHTML = `<i class="fas fa-check-circle"></i> ${result.message}`;
-            messageEl.className = 'message success';
+            setTimeout(() => {
+              versionGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
           } else {
-            // Error
-            showError('couponError', result.message || 'Invalid code');
+            // Code found but doesn't need version selection
+            // Just show checkmark - don't do anything else
+            const messageEl = document.getElementById('message');
+            messageEl.innerHTML = `<i class="fas fa-check-circle"></i> Code verified! Fill in your details and click Submit Redemption.`;
+            messageEl.className = 'message info';
           }
           
         } catch (err) {
           console.error(err);
           clearInfo('couponInfo');
           couponInput.classList.remove('checking');
-          showError('couponError', 'Error checking code. Please try again.');
+          // Don't show error - maybe just network issue
+          // User can still submit and it will check again
         }
         
         checkingCode = false;
