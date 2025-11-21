@@ -753,7 +753,7 @@
       const name         = document.getElementById('name').value.trim();
       const email        = document.getElementById('email').value.trim();
       const phone        = document.getElementById('phone').value.trim();
-      const couponCode   = document.getElementById('couponCode').value.trim();
+      const couponCode = document.getElementById('couponCode').value.trim().toUpperCase();
       let valid = true;
 
       if (!name) { 
@@ -856,6 +856,25 @@
         if (typeof turnstile !== 'undefined') turnstile.reset();
       }
     });
+
+    // Get the input element
+const couponInput = document.getElementById('couponCode');
+
+// Listen for typing/input
+couponInput.addEventListener('input', function() {
+  // 1. Get current cursor position (so cursor doesn't jump to end)
+  const start = this.selectionStart;
+  const end = this.selectionEnd;
+
+  // 2. Force the actual value to Uppercase
+  this.value = this.value.toUpperCase();
+
+  // 3. Restore cursor position
+  this.setSelectionRange(start, end);
+
+  // 4. Clear error message if it exists
+  clearError('couponError');
+});
   </script>
 </body>
 </html>
