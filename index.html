@@ -688,14 +688,14 @@
         <p style="font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
           Haven't received your order or need help with redemption?
         </p>
-        <a href="mailto:support@elicensenest.com" class="support-link">
-          <i class="fas fa-envelope"></i> support@elicensenest.com
+        <a href="/cdn-cgi/l/email-protection#2a595f5a5a45585e6a4f4643494f44594f444f595e04494547" class="support-link">
+          <i class="fas fa-envelope"></i> <span class="__cf_email__" data-cfemail="4b383e3b3b24393f0b2e2722282e25382e252e383f65282426">[email&#160;protected]</span>
         </a>
       </div>
     </div>
   </div>
 
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script>
     // Helper functions for error handling
     const showError = (id, msg) => {
@@ -811,11 +811,11 @@
         const result = await resp.json();
         console.log('📥 Received response:', result);
 
-        // Check if backend is asking for version selection
-        if (result.requiresVersion) {
+        // Check if backend is asking for version selection (like Windows Server flow)
+        if (result.success && result.versions) {
           console.log('🔄 Backend requires version selection');
           
-          // Populate dropdown with versions
+          // Populate dropdown with versions (Windows, Mac)
           const versionSelect = document.getElementById('version');
           versionSelect.innerHTML = '<option value="">Choose Windows or Mac...</option>' + 
             result.versions.map(v => `<option value="${v}">${v}</option>`).join('');
@@ -830,7 +830,7 @@
           messageEl.innerHTML = `<i class="fas fa-info-circle"></i> ${result.prompt}`;
           messageEl.className = 'message info';
           
-          // Re-enable submit button
+          // Re-enable submit button so user can submit again with version
           submitBtn.disabled = false;
           spinner.classList.remove('active');
           return;
@@ -851,13 +851,3 @@
       } catch (err) {
         console.error('❌ Error:', err);
         messageEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Network error. Please check your connection and try again.`;
-        messageEl.className = 'message error';
-      } finally {
-        submitBtn.disabled = false;
-        spinner.classList.remove('active');
-        if (typeof turnstile !== 'undefined') turnstile.reset();
-      }
-    });
-  </script>
-</body>
-</html>
