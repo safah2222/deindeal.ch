@@ -171,7 +171,6 @@
       background: var(--bg-card);
       color: var(--text-primary);
       transition: all 0.2s ease;
-      position: relative;
     }
 
     .form-input:focus {
@@ -187,11 +186,6 @@
     .form-input.error {
       border-color: var(--error);
       box-shadow: 0 0 0 3px rgb(239 68 68 / 0.1);
-    }
-
-    .form-input.checking {
-      border-color: var(--warning);
-      background: #fffbeb;
     }
 
     .form-select {
@@ -212,20 +206,6 @@
     }
 
     .error-message.show {
-      display: flex;
-      align-items: center;
-      gap: 0.375rem;
-    }
-
-    .info-message {
-      display: none;
-      color: var(--warning);
-      font-size: 0.875rem;
-      margin-top: 0.5rem;
-      font-weight: 500;
-    }
-
-    .info-message.show {
       display: flex;
       align-items: center;
       gap: 0.375rem;
@@ -614,17 +594,13 @@
               <span class="code-example">FTVS9A87UN</span>
             </div>
           </div>
-          <div id="couponInfo" class="info-message">
-            <i class="fas fa-spinner fa-spin"></i>
-            Checking code...
-          </div>
           <div id="couponError" class="error-message">
             <i class="fas fa-exclamation-circle"></i>
             Code must be exactly 10 characters (letters and numbers only).
           </div>
         </div>
 
-        <!-- Version Selector (hidden by default, shown when backend asks) -->
+        <!-- Version Selector (Hidden by default, shown when backend requires it) -->
         <div class="form-group" id="versionGroup" style="display:none;">
           <label class="form-label" for="version">
             <i class="fas fa-laptop"></i>
@@ -632,8 +608,6 @@
           </label>
           <select id="version" name="version" class="form-input form-select">
             <option value="">Choose Windows or Mac...</option>
-            <option value="Windows">Windows</option>
-            <option value="Mac">Mac</option>
           </select>
           <div id="versionError" class="error-message">
             <i class="fas fa-exclamation-circle"></i>
@@ -723,13 +697,13 @@
 
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script>
-    // Helper functions
+    // Helper functions for error handling
     const showError = (id, msg) => {
       const el = document.getElementById(id);
       el.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${msg}`;
       el.classList.add('show');
       
-      const input = document.getElementById(id.replace('Error', '').replace('Info', ''));
+      const input = document.getElementById(id.replace('Error', ''));
       if (input) input.classList.add('error');
     };
     
@@ -737,135 +711,32 @@
       const el = document.getElementById(id);
       el.classList.remove('show');
       
-      const input = document.getElementById(id.replace('Error', '').replace('Info', ''));
+      const input = document.getElementById(id.replace('Error', ''));
       if (input) input.classList.remove('error');
     };
 
-    const showInfo = (id, msg) => {
-      const el = document.getElementById(id);
-      el.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${msg}`;
-      el.classList.add('show');
-    };
-
-    const clearInfo = id => {
-      const el = document.getElementById(id);
-      el.classList.remove('show');
-    };
-
     // Clear errors when user starts typing
-    ['name', 'email', 'phone', 'version'].forEach(field => {
+    ['name', 'email', 'phone', 'couponCode', 'version'].forEach(field => {
       const element = document.getElementById(field);
       if (element) {
-        element.addEventListener('input', () => {
-          clearError(field + 'Error');
-        });
+        element.addEventListener('input', () => clearError(field + 'Error'));
       }
     });
 
-    // AUTO-CHECK VOUCHER CODE WHEN 10 DIGITS ENTERED
-    let checkingCode = false;
-    let codeNeedsVersion = false; // Track if code needs version selection
-    const couponInput = document.getElementById('couponCode');
-    
-    couponInput.addEventListener('input', async function(e) {
-      const code = e.target.value.trim().toUpperCase();
-      
-      // Clear previous states
-      clearError('couponError');
-      clearInfo('couponInfo');
-      couponInput.classList.remove('checking');
-      
-      // Hide version selector and message if code is changed
-      document.getElementById('versionGroup').style.display = 'none';
-      document.getElementById('message').className = 'message';
-      codeNeedsVersion = false;
-      
-      // Check if exactly 10 alphanumeric characters
-      if (code.length === 10 && /^[A-Z0-9]{10}$/.test(code)) {
-        // Show checking state
-        couponInput.classList.add('checking');
-        showInfo('couponInfo', 'Checking code...');
-        
-        checkingCode = true;
-        
-        try {
-          // ONLY CHECK IF CODE EXISTS AND NEEDS VERSION SELECTION
-          // Send minimal request - backend will check available_vouchers table
-          const resp = await fetch('https://elicensenest.com/wowcherapi', {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({ 
-              name: 'check',  // Fake data just for checking
-              email: 'check@check.com',
-              phone: '+0000000000',
-              couponCode: code,
-              turnstileResponse: 'check' // Backend should handle this for check-only
-            })
-          });
-          
-          const result = await resp.json();
-          
-          clearInfo('couponInfo');
-          couponInput.classList.remove('checking');
-          
-          // Check if backend asks for version selection
-          if (result.requiresVersion) {
-            // Show version dropdown
-            const versionGroup = document.getElementById('versionGroup');
-            const versionLabel = document.getElementById('versionLabel');
-            
-            versionGroup.style.display = 'block';
-            versionLabel.textContent = `Select Your Operating System for ${result.product} *`;
-            
-            codeNeedsVersion = true;
-            
-            // Show info message
-            const messageEl = document.getElementById('message');
-            messageEl.innerHTML = `<i class="fas fa-check-circle"></i> Code verified! Please select your operating system below.`;
-            messageEl.className = 'message info';
-            
-            // Scroll to version selector
-            setTimeout(() => {
-              versionGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
-          } else {
-            // Code found but doesn't need version selection
-            // Just show checkmark - don't do anything else
-            const messageEl = document.getElementById('message');
-            messageEl.innerHTML = `<i class="fas fa-check-circle"></i> Code verified! Fill in your details and click Submit Redemption.`;
-            messageEl.className = 'message info';
-          }
-          
-        } catch (err) {
-          console.error(err);
-          clearInfo('couponInfo');
-          couponInput.classList.remove('checking');
-          // Don't show error - maybe just network issue
-          // User can still submit and it will check again
-        }
-        
-        checkingCode = false;
-      }
-    });
-
-    // Form submission
+    // Form submission handler
     document.getElementById('redeemForm').addEventListener('submit', async function(e) {
       console.log('🟢 Form submit triggered');
       e.preventDefault();
-
-      // Don't submit if still checking code
-      if (checkingCode) {
-        return;
-      }
 
       // Clear all errors
       ['nameError','emailError','phoneError','couponError','captchaError','versionError']
         .forEach(clearError);
 
+      // Get form values
       const name         = document.getElementById('name').value.trim();
       const email        = document.getElementById('email').value.trim();
       const phone        = document.getElementById('phone').value.trim();
-      const couponCode   = document.getElementById('couponCode').value.trim().toUpperCase();
+      const couponCode   = document.getElementById('couponCode').value.trim();
       const versionGroup = document.getElementById('versionGroup');
       const version      = versionGroup.style.display !== 'none' ? document.getElementById('version').value : null;
       
@@ -884,7 +755,7 @@
         showError('phoneError','Enter up to 15 digits; "+" allowed only at start.'); 
         valid = false; 
       }
-      if (!/^[A-Z0-9]{10}$/.test(couponCode)) {
+      if (!/^[A-Za-z0-9]{10}$/.test(couponCode)) {
         showError('couponError', 'Code must be exactly 10 characters (letters and numbers only).');
         valid = false;
       }
@@ -916,49 +787,69 @@
       messageEl.className = 'message';
 
       try {
+        const payload = { 
+          name, 
+          email, 
+          phone, 
+          couponCode, 
+          turnstileResponse: token
+        };
+        
+        // Add version if it exists
+        if (version) {
+          payload.version = version;
+        }
+
+        console.log('📤 Sending payload:', payload);
+
         const resp = await fetch('https://elicensenest.com/wowcherapi', {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ 
-            name, 
-            email, 
-            phone, 
-            couponCode, 
-            turnstileResponse: token, 
-            ...(version && {version}) 
-          })
+          body: JSON.stringify(payload)
         });
         
         const result = await resp.json();
+        console.log('📥 Received response:', result);
 
-        // Check if backend asks for version (shouldn't happen if auto-check worked)
+        // Check if backend is asking for version selection
         if (result.requiresVersion) {
-          const versionGroup = document.getElementById('versionGroup');
-          const versionLabel = document.getElementById('versionLabel');
+          console.log('🔄 Backend requires version selection');
           
+          // Populate dropdown with versions
+          const versionSelect = document.getElementById('version');
+          versionSelect.innerHTML = '<option value="">Choose Windows or Mac...</option>' + 
+            result.versions.map(v => `<option value="${v}">${v}</option>`).join('');
+          
+          // Show version dropdown
           versionGroup.style.display = 'block';
-          versionLabel.textContent = `Select Your Operating System for ${result.product} *`;
           
+          // Update label with product name
+          document.getElementById('versionLabel').textContent = `Select Your Operating System for ${result.product} *`;
+          
+          // Show info message
           messageEl.innerHTML = `<i class="fas fa-info-circle"></i> ${result.prompt}`;
           messageEl.className = 'message info';
           
-          versionGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Re-enable submit button
+          submitBtn.disabled = false;
+          spinner.classList.remove('active');
           return;
         }
 
+        // Check if successful
         if (result.success) {
           messageEl.innerHTML = `<i class="fas fa-check-circle"></i> ${result.message}`;
           messageEl.className = 'message success';
           
           // Reset form on success
           this.reset();
-          document.getElementById('versionGroup').style.display = 'none';
+          versionGroup.style.display = 'none';
         } else {
           messageEl.innerHTML = `<i class="fas fa-times-circle"></i> ${result.message || 'Redemption failed. Please try again.'}`;
           messageEl.className = 'message error';
         }
       } catch (err) {
-        console.error(err);
+        console.error('❌ Error:', err);
         messageEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Network error. Please check your connection and try again.`;
         messageEl.className = 'message error';
       } finally {
