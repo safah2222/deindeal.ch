@@ -42,6 +42,7 @@
       min-height: 100vh;
     }
 
+    /* Header */
     .header {
       background: var(--bg-card);
       box-shadow: var(--shadow-md);
@@ -87,6 +88,7 @@
       font-weight: 500;
     }
 
+    /* Main Container */
     .container {
       max-width: 1200px;
       margin: 2rem auto;
@@ -117,6 +119,7 @@
       }
     }
 
+    /* Form Card */
     .form-card {
       background: var(--bg-card);
       border-radius: var(--radius-lg);
@@ -142,6 +145,7 @@
       font-size: 1rem;
     }
 
+    /* Form Groups */
     .form-group {
       margin-bottom: 1.5rem;
       position: relative;
@@ -171,6 +175,7 @@
       background: var(--bg-card);
       color: var(--text-primary);
       transition: all 0.2s ease;
+      position: relative;
     }
 
     .form-input:focus {
@@ -211,6 +216,7 @@
       gap: 0.375rem;
     }
 
+    /* Code Format Help */
     .code-help {
       background: #f1f5f9;
       border: 1px solid var(--border);
@@ -246,6 +252,7 @@
       border: 1px solid var(--border);
     }
 
+    /* Submit Button */
     .submit-button {
       width: 100%;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
@@ -276,6 +283,7 @@
       box-shadow: none;
     }
 
+    /* Loading Spinner */
     .loading-spinner {
       display: none;
       margin: 1rem 0;
@@ -301,6 +309,7 @@
       100% { transform: rotate(360deg); }
     }
 
+    /* Message */
     .message {
       margin-top: 1rem;
       padding: 1rem;
@@ -331,6 +340,7 @@
       display: block;
     }
 
+    /* Info Card */
     .info-card {
       background: var(--bg-card);
       border-radius: var(--radius-lg);
@@ -409,6 +419,7 @@
       font-size: 0.8125rem;
     }
 
+    /* Support Section */
     .support-section {
       background: #f1f5f9;
       padding: 1.5rem;
@@ -436,12 +447,13 @@
       text-decoration: underline;
     }
 
+    /* Note */
     .note {
       background: #fffbeb;
       border: 1px solid #fed7aa;
       border-radius: var(--radius);
       padding: 1rem;
-      margin-top: 0.75rem;
+      margin-top: 1.5rem;
       display: flex;
       align-items: flex-start;
       gap: 0.75rem;
@@ -458,12 +470,14 @@
       line-height: 1.5;
     }
 
+    /* Turnstile Container */
     .turnstile-container {
       display: flex;
       justify-content: center;
       margin: 1rem 0;
     }
 
+    /* Mobile Optimizations */
     @media (max-width: 640px) {
       .form-card {
         padding: 1.5rem;
@@ -488,6 +502,7 @@
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header class="header">
     <div class="header-content">
       <div class="logo">
@@ -501,7 +516,9 @@
     </div>
   </header>
 
+  <!-- Main Container -->
   <div class="container">
+    <!-- Form Section -->
     <div class="form-card">
       <div class="form-header">
         <h1 class="form-title">Redeem Your Voucher</h1>
@@ -596,22 +613,22 @@
           </div>
           <div id="couponError" class="error-message">
             <i class="fas fa-exclamation-circle"></i>
-            Code must be exactly 10 characters (letters and numbers only).
+            Code must be in format XXXXXXXXXX (10 characters ).
           </div>
         </div>
 
-        <!-- Version Selector (Hidden by default, shown when backend requires it) -->
+        <!-- Version Selector (hidden by default) -->
         <div class="form-group" id="versionGroup" style="display:none;">
           <label class="form-label" for="version">
             <i class="fas fa-laptop"></i>
             <span id="versionLabel">Select Your Operating System *</span>
           </label>
-          <select id="version" name="version" class="form-input form-select">
-            <option value="">Choose Windows or Mac...</option>
+          <select id="version" name="version" class="form-input form-select" disabled>
+            <option value="">Select a version...</option>
           </select>
           <div id="versionError" class="error-message">
             <i class="fas fa-exclamation-circle"></i>
-            Please select your operating system.
+            Please pick a version.
           </div>
         </div>
 
@@ -640,6 +657,7 @@
       </form>
     </div>
 
+    <!-- Instructions Section -->
     <div class="info-card">
       <div class="info-header">
         <h2><i class="fas fa-question-circle"></i> How to Find Your Voucher Code</h2>
@@ -688,21 +706,22 @@
         <p style="font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
           Haven't received your order or need help with redemption?
         </p>
-        <a href="/cdn-cgi/l/email-protection#2a595f5a5a45585e6a4f4643494f44594f444f595e04494547" class="support-link">
-          <i class="fas fa-envelope"></i> <span class="__cf_email__" data-cfemail="4b383e3b3b24393f0b2e2722282e25382e252e383f65282426">[email&#160;protected]</span>
+        <a href="mailto:support@elicensenest.com" class="support-link">
+          <i class="fas fa-envelope"></i> support@elicensenest.com
         </a>
       </div>
     </div>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script>
-    // Helper functions for error handling
     const showError = (id, msg) => {
       const el = document.getElementById(id);
+      el.textContent = '';
       el.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${msg}`;
       el.classList.add('show');
       
+      // Add error styling to input
       const input = document.getElementById(id.replace('Error', ''));
       if (input) input.classList.add('error');
     };
@@ -711,19 +730,18 @@
       const el = document.getElementById(id);
       el.classList.remove('show');
       
+      // Remove error styling from input
       const input = document.getElementById(id.replace('Error', ''));
       if (input) input.classList.remove('error');
     };
 
     // Clear errors when user starts typing
-    ['name', 'email', 'phone', 'couponCode', 'version'].forEach(field => {
-      const element = document.getElementById(field);
-      if (element) {
-        element.addEventListener('input', () => clearError(field + 'Error'));
-      }
+    ['name', 'email', 'phone'].forEach(field => {
+      document.getElementById(field).addEventListener('input', () => {
+        clearError(field + 'Error');
+      });
     });
 
-    // Form submission handler
     document.getElementById('redeemForm').addEventListener('submit', async function(e) {
       console.log('🟢 Form submit triggered');
       e.preventDefault();
@@ -732,17 +750,12 @@
       ['nameError','emailError','phoneError','couponError','captchaError','versionError']
         .forEach(clearError);
 
-      // Get form values
       const name         = document.getElementById('name').value.trim();
       const email        = document.getElementById('email').value.trim();
       const phone        = document.getElementById('phone').value.trim();
       const couponCode   = document.getElementById('couponCode').value.trim();
-      const versionGroup = document.getElementById('versionGroup');
-      const version      = versionGroup.style.display !== 'none' ? document.getElementById('version').value : null;
-      
       let valid = true;
 
-      // Validate fields
       if (!name) { 
         showError('nameError','Please enter your name.'); 
         valid = false; 
@@ -755,12 +768,13 @@
         showError('phoneError','Enter up to 15 digits; "+" allowed only at start.'); 
         valid = false; 
       }
+      
+      // Validate coupon code format: XXXXXXXXXX (10 alphanumeric characters)
       if (!/^[A-Za-z0-9]{10}$/.test(couponCode)) {
         showError('couponError', 'Code must be exactly 10 characters (letters and numbers only).');
         valid = false;
       }
 
-      // Validate CAPTCHA
       const tokenInput = document.querySelector("input[name='cf-turnstile-response']");
       const token = tokenInput ? tokenInput.value : '';
       if (!token) { 
@@ -768,77 +782,61 @@
         valid = false; 
       }
 
-      // Validate version selection if visible
-      if (versionGroup.style.display !== 'none' && !version) {
-        showError('versionError','Please select your operating system.'); 
-        valid = false;
-      }
-
       if (!valid) return;
 
-      // Get UI elements
+      // Check version selection
+      const versionGroup = document.getElementById('versionGroup');
+      const versionSelect = document.getElementById('version');
+      let version = null;
+      if (versionGroup.style.display !== 'none') {
+        version = versionSelect.value;
+        if (!version) { 
+          showError('versionError','Please pick a version.'); 
+          return; 
+        }
+        clearError('versionError');
+      }
+
       const submitBtn = document.getElementById('submitBtn');
       const spinner   = document.getElementById('loadingSpinner');
       const messageEl = document.getElementById('message');
       
-      // Disable form during submission
       submitBtn.disabled = true;
       spinner.classList.add('active');
-      messageEl.className = 'message';
+      messageEl.className = 'message'; // Reset classes
 
       try {
-        const payload = { 
-          name, 
-          email, 
-          phone, 
-          couponCode, 
-          turnstileResponse: token
-        };
-        
-        // Add version if it exists
-        if (version) {
-          payload.version = version;
-        }
-
-        console.log('📤 Sending payload:', payload);
-
         const resp = await fetch('https://elicensenest.com/wowcherapi', {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
-          body: JSON.stringify(payload)
+          body: JSON.stringify({ 
+            name, 
+            email, 
+            phone, 
+            couponCode, 
+            turnstileResponse: token, 
+            ...(version && {version}) 
+          })
         });
-        
         const result = await resp.json();
-        console.log('📥 Received response:', result);
 
-        // Check if backend is asking for version selection (like Windows Server flow)
+        // Check if backend returned versions array (like Windows Server flow)
         if (result.success && result.versions) {
-          console.log('🔄 Backend requires version selection');
-          
-          // Populate dropdown with versions (Windows, Mac)
-          const versionSelect = document.getElementById('version');
-          versionSelect.innerHTML = '<option value="">Choose Windows or Mac...</option>' + 
+          versionSelect.innerHTML = '<option value="">Select a version...</option>' + 
             result.versions.map(v => `<option value="${v}">${v}</option>`).join('');
-          
-          // Show version dropdown
           versionGroup.style.display = 'block';
+          versionSelect.disabled = false;
           
-          // Update label with product name
-          document.getElementById('versionLabel').textContent = `Select Your Operating System for ${result.product} *`;
-          
-          // Show info message
-          messageEl.innerHTML = `<i class="fas fa-info-circle"></i> ${result.prompt}`;
+          messageEl.innerHTML = `<i class="fas fa-check-circle"></i> ${result.prompt} for ${result.product}.`;
           messageEl.className = 'message info';
           
-          // Re-enable submit button so user can submit again with version
           submitBtn.disabled = false;
           spinner.classList.remove('active');
           return;
         }
 
-        // Check if successful
         if (result.success) {
-          messageEl.innerHTML = `<i class="fas fa-check-circle"></i> ${result.message}`;
+          messageEl.innerHTML = `<i class="fas fa-check-circle"></i> Voucher redeemed successfully! Check your email now!`;
           messageEl.className = 'message success';
           
           // Reset form on success
@@ -849,5 +847,15 @@
           messageEl.className = 'message error';
         }
       } catch (err) {
-        console.error('❌ Error:', err);
+        console.error(err);
         messageEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Network error. Please check your connection and try again.`;
+        messageEl.className = 'message error';
+      } finally {
+        submitBtn.disabled = false;
+        spinner.classList.remove('active');
+        if (typeof turnstile !== 'undefined') turnstile.reset();
+      }
+    });
+  </script>
+</body>
+</html>
